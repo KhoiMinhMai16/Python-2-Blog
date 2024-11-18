@@ -1,0 +1,7 @@
+ADMIN:
+tk admin
+mk 123
+
+USER:
+tk ad
+mk 123

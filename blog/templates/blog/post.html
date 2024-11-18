@@ -1,0 +1,83 @@
+{% extends "pages/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .centered-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: auto;
+    }
+
+    .content {
+        text-align: left;
+    }
+
+    .comments-container {
+        float: left;
+        width: 100%;
+    }
+
+    .comment {
+        text-align: left;
+    }
+
+    .comment-form {
+        display: flex; /* Sử dụng display: flex; để sắp xếp theo chiều ngang */
+        align-items: left; /* Căn giữa theo chiều dọc */
+        margin-top: 10px; /* Khoảng cách giữa hộp bình luận và nút quay lại */
+    }
+
+    footer {
+        text-align: center;
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+    }
+</style>
+
+<div class="centered-container">
+    <h3><a href="blog/{{ post.id }}">{{ post.title }}</a></h3>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" width="500px" height="300px" />
+    {% endif %}
+    <h6>on {{ post.date }}</h6>
+    <div class="content">
+        {{ post.body|safe|linebreaks }}
+    </div>
+    <audio src="{{ post.audio.url }}" controls></audio>
+
+    <div class="comments-container">
+        {% for comment in post.comments.all %}
+            <div class="comment">
+                <h4><strong>{{ comment.author }}</strong></h4>
+                <h6><p>{{ comment.date }}</p></h6>
+                <p>{{ comment.body|linebreaks }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if user.username %}
+        <form action="{% url 'post' post.id %}" method="POST">
+            {% csrf_token %}
+            <p><label>Bình luận:</label></p>
+            {{ form.body }}
+            <br/>
+            <input type="submit" value="Bình luận"/>
+        </form>
+    {% endif %}
+    <a href="/blog/" style="justify-content: center; align-items: center; display: flex; text-decoration: none">
+        <button >Quay lại</button>
+    </a>
+</div>
+{% endblock %}
